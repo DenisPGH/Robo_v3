@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/nano/Desktop/Robo_v3/build",
+  "command": "/usr/bin/g++ -isystem /home/nano/Desktop/lidar/rplidar_sdk/sdk/include -isystem /home/nano/Desktop/lidar/rplidar_sdk/sdk/src -isystem /home/nano/Desktop/lidar/rplidar_sdk/obj/Linux/Release/sdk/src/arch/linux -g -o CMakeFiles/robo_v3.dir/main.cpp.o -c /home/nano/Desktop/Robo_v3/main.cpp",
+  "file": "/home/nano/Desktop/Robo_v3/main.cpp"
+}
+]
