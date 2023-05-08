@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <string.h>
+#include <fstream>
 
 #include "sl_lidar.h" 
 #include "sl_lidar_driver.h"
@@ -107,23 +108,40 @@ int main() {
         drv->setMotorSpeed();
     // start scan...
     drv->startScan(0,1);
-
+    // open file connection
+    
     // fetech result and print it out...
     while (1) {
+        
         sl_lidar_response_measurement_node_hq_t nodes[8192];
         size_t   count = _countof(nodes);
 
         op_result = drv->grabScanDataHq(nodes, count);
-
+        int16_t count_point=0;
         if (SL_IS_OK(op_result)) {
             drv->ascendScanData(nodes, count);
+            std::ofstream out("current_scan.csv"); //open file
             for (int pos = 0; pos < (int)count ; ++pos) {
-                printf("%s theta: %03.2f Dist: %08.2f Q: %d Deni\n", 
-                    (nodes[pos].flag & SL_LIDAR_RESP_HQ_FLAG_SYNCBIT) ?"S ":"  ", 
-                    (nodes[pos].angle_z_q14 * 90.f) / 16384.f,
-                    nodes[pos].dist_mm_q2/4.0f,
-                    nodes[pos].quality >> SL_LIDAR_RESP_MEASUREMENT_QUALITY_SHIFT);
+                if(nodes[pos].dist_mm_q2/4.0f>0){
+                    count_point++;
+                    // printf("%s theta: %03.2f Dist: %08.2f Q: %d points: %d \n", 
+                    // (nodes[pos].flag & SL_LIDAR_RESP_HQ_FLAG_SYNCBIT) ?"S ":"  ", 
+                    // (nodes[pos].angle_z_q14 * 90.f) / 16384.f,
+                    // nodes[pos].dist_mm_q2/4.0f,
+                    // nodes[pos].quality >> SL_LIDAR_RESP_MEASUREMENT_QUALITY_SHIFT,
+                    // count_point);
+
+                    //write to outputfile
+                    
+                    out <<(nodes[pos].angle_z_q14 * 90.f) / 16384.f << "|" << nodes[pos].dist_mm_q2/4.0f<<std::endl; //deg,mm
+                    
+
+
+                }
+
+                
             }
+            out.close(); //close file
         }
 
         if (ctrl_c_pressed){ 
