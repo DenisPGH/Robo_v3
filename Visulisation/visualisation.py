@@ -22,6 +22,8 @@ class Visualisation:
         :param angle: in degree ,0 is +y
         :param distance: from lidar to the point
         :return: new coordiantes of the found point
+
+        
         """
 
         new_x = distance * math.sin(math.radians(angle+orientation_angle))
